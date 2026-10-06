@@ -1,0 +1,46 @@
+# a) & b):
+set.seed(1234)
+simulate_hpp <- function(lambda, T_max){
+  times <- c()
+  t <- 0
+  
+  while (TRUE) {
+    t <- t + rexp(1, lambda)
+    if(t > T_max) break
+    times = c(times, t)
+  }
+  return(times)
+}
+
+lambda = 5
+T_max = 8
+event_hpp <- simulate_hpp(lambda, T_max)
+event_hpp
+
+plot(c(0, event_hpp), c(0:length(event_hpp)), 
+     xlab = "Time", ylab = "N(t)", main = "Plot of HHP N(t)", type = "s")
+
+
+# c):
+length(event_hpp)/T_max
+# Thus the number of events per hour is 5.125, which is close to the theoretical rate of lambda = 5.
+
+
+# d):
+nsims = 1000
+counts <- replicate(nsims, length(simulate_hpp(lambda, T_max)))
+hist(counts, prob = TRUE, xlab = "Time", ylab = "Density")
+mean(counts)
+# The mean of the simulated Poisson process is 40.255, which is close to the theoretical mean of 5*8 = 40.
+
+# e): 
+mean(counts == 40)
+dpois(40, 40)
+# The empirical probability of observing 40 events in 8 hours is 0.076, compared to the theoretical probability of 0.06294704.
+
+# f): 
+empirical_prob_gt_50
+theoretical_prob_gt_50
+# The empirical probability of observing more than 50 observations in 8 hours is 0.059, compared to the theoretical probability of 0.05262805
+
+
